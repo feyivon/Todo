@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TODO LIST - Home</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    /* Left */
+    .left {
+      flex: 1;
+      border: 1px solid #ccc;
+    }
+
+    .left h2 {
+      font-size: 20px;
+      margin: 16px 16px 4px;
+    }
+
+    .left .date {
+      font-size: 13px;
+      color: #888;
+      margin: 0 16px 12px;
+    }
+
+    .task-area {
+      min-height: 280px;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .task-row:last-child { border-bottom: none; }
+
+    .task-name { font-size: 14px; flex: 1; }
+
+    .task-row .btns { display: flex; gap: 6px; }
+
+    button {
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 7px 12px;
+    }
+
+    .btn-done   { background: #28a745; }
+    .btn-delete { background: #dc3545; }
+    .btn-edit   { background: #007bff; }
+
+    /* Add bar */
+    .add-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+    }
+
+    .add-bar input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      flex: 1;
+      color: #333;
+    }
+
+    .btn-add {
+      background: #007bff;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+
+    /* Right */
+    .right {
+      width: 280px;
+      border: 1px solid #ccc;
+      align-self: flex-start;
+    }
+
+    .right h2 {
+      font-size: 18px;
+      padding: 14px 16px;
+      margin: 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .completed-row {
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+
+    .completed-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+  <h1>Django ToDo App</h1>
+
+  <div class="container">
+
+    <!-- Left Panel -->
+    <div class="left">
+      <h2>My Day</h2>
+      <p class="date">{% now "F Y" %}</p>
+
+      <div class="task-area" id="task-list">
+        <div class="task-row">
+          <span class="task-name">This is some Task</span>
+          <div class="btns">
+            <button class="btn-done" onclick="markDone(this)">&#10003; Mark as Done</button>
+            <button class="btn-delete" onclick="deleteTask(this)">&#128465;</button>
+            <button class="btn-edit" onclick="editTask(this)">&#9998;</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-bar">
+        <input type="text" id="new-task" placeholder="this is the new task" />
+        <button class="btn-add" onclick="addTask()">Add</button>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right">
+      <h2>Completed Tasks</h2>
+      <div id="completed-list">
+        <div class="completed-row">This is the completed task.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function addTask() {
+      const input = document.getElementById('new-task');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const row = document.createElement('div');
+      row.className = 'task-row';
+      row.innerHTML = `
+        <span class="task-name">${text}</span>
+        <div class="btns">
+          <button class="btn-done" onclick="markDone(this)">&#10003; Mark as Done</button>
+          <button class="btn-delete" onclick="deleteTask(this)">&#128465;</button>
+          <button class="btn-edit" onclick="editTask(this)">&#9998;</button>
+        </div>`;
+      document.getElementById('task-list').appendChild(row);
+      input.value = '';
+    }
+
+    document.getElementById('new-task').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    function deleteTask(btn) {
+      btn.closest('.task-row').remove();
+    }
+
+    function editTask(btn) {
+      const nameEl = btn.closest('.task-row').querySelector('.task-name');
+      const val = prompt('Edit task:', nameEl.textContent);
+      if (val && val.trim()) nameEl.textContent = val.trim();
+    }
+
+    function markDone(btn) {
+      const row = btn.closest('.task-row');
+      const name = row.querySelector('.task-name').textContent;
+      row.remove();
+
+      const cRow = document.createElement('div');
+      cRow.className = 'completed-row';
+      cRow.textContent = name;
+      document.getElementById('completed-list').appendChild(cRow);
+    }
+  </script>
+
+</body>
+</html>
