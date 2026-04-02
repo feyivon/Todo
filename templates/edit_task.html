@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TODO LIST - Home</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task - TODO LIST</title>
+
+    <style>
     /* Bootstrap core essentials */
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 14px; color: #212529; background-color: #fff; }
@@ -50,70 +51,20 @@
   </style>
 </head>
 <body>
-
-  <div class="container mt-5">
-
-    <h3 class="text-center mb-4">Django ToDo App</h3>
-
-    <div class="row">
-
-      <!-- Left: My Day + Active Tasks -->
-      <div class="col-md-6 p-0">
-        <h4>My Day</h4>
-        <p class="text-muted">{% now "F Y" %}</p>
-
-        <!-- Active Task List -->
-        <div id="task-list">
-          {% for task in tasks %}
-          <div class="card m-1" id="task-1">
-            <div class="card-body">
-              <span class="task-text">{{task.task}}</span>
-              <span style="position: relative; float: right;">
-                <a  href="{% url 'mark_as_done' task.pk %}" class="btn btn-success"><i class="fa fa-check "></i>Mark as Done</a>
-                <a href="{% url 'delete_task' task.id %}" class="btn btn-primary btn-sm">&#128465;</a>
-                <a href="{% url 'edit_task' task.id %}" class="btn btn-primary btn-sm">&#9998;</a>
-              </span>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-
-        <!-- Add Task Form -->
-        <div class="task-section">
-         <form action="{% url 'addTask' %}" method="POST">
+    <div class="container">
+        <h3 class="pt-5 pb-5 text-center">TODO LIST - Edit Task</h3>
+        <form action="{% url 'edit_task' get_task.pk %}" method="POST" style="width: 500; margin: auto;">
             {% csrf_token %}
             <div class="form-group">
               <span style="display: flex;">
-                <input type="text" name="task" class="form-control" placeholder="Add a task" />
+                <input type="text" name="task" class="form-control" placeholder="Update" value="{{get_task.task}}" />
                 <button type="submit" class="btn btn-primary" style="width: 200px;">
                   <i class="fa fa-plus"></i> Add
                 </button>
               </span>
             </div>
         </form>
-        </div>
-      </div>
-
-      <!-- Right: Completed Tasks -->
-      <div class="col-md-6">
-        <h5>Completed Tasks</h5>
-        {% for task in completed_task %}
-        <div id="completed-list">
-          <div class="card m-1">
-            <div class="card-body">
-              {{task.task}}
-              <span style="position: relative; float: right;">
-                <a  href="{% url 'mark_as_undone' task.pk %}" class="btn btn-danger"><i class="fa fa-times "></i>Mark as UnDone</a>
-                <!-- <button class="btn btn-danger btn-sm" onclick="deleteTask('task-1')">&#128465;</button>
-                <a href="{% url 'edit_task' task.pk %}"class = "btn btn-primary"><i class="fa fa-pencil"></i></a> -->
-              </span>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
 
     </div>
-  </div>
 </body>
 </html>
